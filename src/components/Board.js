@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from './Button'
 import Names from './Names';
-var truthify = require('../js/truthify');
+// var truthify = require('../js/truthify');
 class Board extends React.Component {
 
 
@@ -9,8 +9,14 @@ class Board extends React.Component {
     handleClick = (event) => {
         if(event.target.value === 'submit')
         {
-            let thing = this.state.proposition.split(' ');
-            console.log(thing);
+            if(this.checkForErrors(this.state.proposition))
+            {
+
+            }
+            else
+            {
+                this.props.onTruth(this.state.proposition, this.state.names);
+            }
             
         }
         else if(event.target.value === 'clear')
@@ -45,6 +51,10 @@ class Board extends React.Component {
     del = () => {
         const jim = this.state.proposition.trim();
         this.setState({proposition: jim.substring(0, jim.lastIndexOf(' '))})
+    }
+
+    checkForErrors = (proposition) => {
+        
     }
 
     render() {
