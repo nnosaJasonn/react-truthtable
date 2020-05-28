@@ -1,6 +1,7 @@
 import React from 'react';
 
-const Table = (props) => {
+const Table = (props) => 
+{
 
     console.log('props type ' + typeof(props.proposition))
     if(props.proposition === [])
@@ -12,7 +13,9 @@ const Table = (props) => {
         <div>
             Proposition: {props.proposition} <br/>
             names: {props.names}
-        </div>)
+        </div>
+        )
+
     
 }
 

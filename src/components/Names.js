@@ -1,16 +1,14 @@
 import React from 'react';
 import Button from './Button';
-const Names = (props) => {
-    if(props.names > 0)
+const Names = (props) => 
+{
+    if(props.names.length > 0)
     {
         let buttons = [];
-        let char = '@'
-        for(let i = 0; i<props.names; i++)
+        for(let i = 0; i<props.names.length; i++)
         {
-            char = String.fromCharCode(char.charCodeAt() + 1);
-            console.log(char);
             buttons.push(
-                <Button onClick={props.onClick} key={i} value={char} name={char} />
+                <Button onClick={props.onClick} key={i} value={props.names[i]} name={props.names[i]} />
             )
         }
         return (
@@ -26,6 +24,8 @@ const Names = (props) => {
             </div>
         )
     }
+
+
     return (
         <div className="column ">
         <select onChange={props.onSelectChange} className="ui dropdown">
@@ -38,5 +38,7 @@ const Names = (props) => {
         </div>
     )
 }
+
+
 
 export default Names;
