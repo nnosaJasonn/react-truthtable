@@ -9,9 +9,7 @@ class Board extends React.Component
         if(event.target.value === '~')
         {
             const jim = this.state.proposition
-
             this.setState({proposition: jim + event.target.value});
-            
         }
         else 
         {
@@ -61,38 +59,38 @@ class Board extends React.Component
                 msg: 'Not a proposition'
             })
         }
+        var flag = false;
+        var conErr = false;
+        var nameErr = false
         for(let i = 0; i<propArr.length; i++)
         {
-            var flag = false;
-            var conAdded = false;
-            var nameAdded = false
-            if(connectives.includes(propArr[i]) && flag === true && conAdded === false)
+           
+            if(connectives.includes(propArr[i]) && flag === true && conErr === false)
             {
                 err.push({
                     type: 'ambiguity',
                     msg:'Please add parentheses to prevent ambiguity'
                 })
-                conAdded = true;
+                conErr = true;
             }
             if(connectives.includes(propArr[i]) && flag === false)
             {
                 flag = true;
             }
 
-            if(flag === true && propArr[i] === '(' || propArr[i] === ')')
+            if(flag === true && (propArr[i] === '(' || propArr[i] === ')'))
             {
                 flag = false
             }
 
-            if(names.includes(propArr[i]) && names.includes(propArr[i+1]) && nameAdded === false)
+            if(names.includes(propArr[i]) && names.includes(propArr[i+1]) && nameErr === false)
             {
                 err.push({
                     type: 'invalid',
                     msg: 'Names must be joined by a connective'});
-                nameAdded = true;
+                nameErr = true;
             }
         }
-        
         
         if(err.length > 0)
         {
@@ -101,7 +99,7 @@ class Board extends React.Component
         }
         else
         {
-            this.props.onTruth(this.state.proposition, this.state.names);
+            this.props.onTruth(this.state.proposition.split(' '), this.state.names);
         }
     }
 
@@ -132,7 +130,7 @@ class Board extends React.Component
                         <Button onClick={this.handleClick}  value="~" name="~" />
                         <Button onClick={this.handleClick}  value="&" name="&" />
                         <Button onClick={this.handleClick}  value="V" name="V" />
-                        <Button onClick={this.handleClick}  value="->" name="->" />
+                        <Button onClick={this.handleClick}  value="-> " name="->" />
                     </div>
                 </div>
                  <div className="row centered">
