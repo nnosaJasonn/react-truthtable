@@ -8,8 +8,7 @@ class App extends React.Component
    {
       this.setState({proposition, names})
    }
-    render() 
-    {
+    render() {
         return (
             <div>
                 <div className="ui  centered  container" style={{marginTop: "10px"}}>

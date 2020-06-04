@@ -163,11 +163,16 @@ const findConnective = (str) =>
     let strArr = str.split('')
     let connectives = ['&', 'V', '->', '<->'];
     let parenCount = 0;
-    var conn = '';
-    var left = '';
-    var right = '';
+    let conn = '';
+    let left = '';
+    let right = '';
+    let ifOrIfIf = ''
     for(let i = 0; i < strArr.length; i++)
     {   
+        if(strArr[i] === '<' || strArr[i] === '-', strArr[i] === '>')
+        {
+            ifOrIfIf += strArr[i];
+        }
         if(strArr[i] === '(' )
         {
             parenCount += 1;
@@ -183,6 +188,11 @@ const findConnective = (str) =>
         if(connectives.includes(strArr[i]) && parenCount === 0)
         {
             conn = strArr[i];
+        }
+        if(connectives.includes(ifOrIfIf) && parenCount === 0)
+        {
+            conn = strArr[i];
+            ifOrIfIf = '';
         }
         if(conn.length === 0)
         {
@@ -202,6 +212,8 @@ const findConnective = (str) =>
 
 const buildTruthObj = (propArr) => 
 {
+    
+    
     let res = [];
     for(let i = 0; i < propArr.length; i++)
     {
@@ -276,7 +288,6 @@ const processProposition = (proposition, names) =>
     let truthObj = tableSetup(names);
     console.log(truthObj);
     let propositionArr = [];
-    console.log(proposition);
     propositionArr = separatePropositions(proposition)
     propositionArr = buildTruthObj(propositionArr);
     console.log(propositionArr);
@@ -308,10 +319,6 @@ const processProposition = (proposition, names) =>
     return truthObj;
 }
 
-const makeTable = (truthValues) =>
-{
-    
-}
 
 /**
  * 
