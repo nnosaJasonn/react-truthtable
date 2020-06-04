@@ -24,11 +24,10 @@ const Table = ({proposition, names}) =>
             var td = []
             for(const prop in truthValues)
             {
-                console.log('truthValues[prop][i]: ' + truthValues[prop][i]);
                 
                 td.push(<td key={prop + i}>{truthValues[prop][i] === true ? 'T' : 'F'}</td>)
             }
-            body.push(<TableRow td={td} /> )
+            body.push(<TableRow key={i} td={td} /> )
         }
 
     }
