@@ -2,10 +2,6 @@ import React from 'react';
 
 class Button extends React.Component 
 {
-    onClick =(event)=>
-    {
-        console.log(event.target.value);
-    }
     render() 
     {
         return (

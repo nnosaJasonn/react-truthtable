@@ -1,30 +1,65 @@
 import React from 'react';
-
-const Table = ({proposition, names}) => 
+import TableRow from './TableRow';
+const Table = ({proposition, names, openCount, closeCount, text}) => 
 {
-
+    var truthValues;
+    var head = [];
+    var body = [];
     console.log('props type ' + typeof(proposition))
     if(proposition.length === 0)
     {
-        return <div>Hi!</div>
+        return <div></div>
     }
     else
     {
-        processProposition(proposition, names);
+        truthValues = processProposition(proposition, names, openCount, closeCount, text);
+        
+        // for(const prop in truthValues)
+        // {
+        //     head.push(<th key={prop}>{prop}</th>);
+        // }
+        // for(let i = 0; i < truthValues[names[0]].length; i++)
+        // {
+        //     var td = []
+        //     for(const prop in truthValues)
+        //     {
+        //         console.log('truthValues[prop][i]: ' + truthValues[prop][i]);
+                
+        //         td.push(<td key={prop + i}>{truthValues[prop][i] === true ? 'T' : 'F'}</td>)
+        //     }
+        //     body.push(<TableRow td={td} /> )
+        // }
+
     }
 
-    
 
     return ( 
         <div>
+        <div>
             Proposition: {proposition} <br/>
             names: {names}
+        </div>
+        // <table className="ui celled table unstackable">
+        //     <thead>
+        //         <tr>
+        //             {head}
+        //         </tr>
+        //     </thead>
+        //     <tbody>
+        //         {body}
+        //     </tbody>
+        // </table>
         </div>
         )
 
     
 }
 
+/**
+ * 
+ * @param num: 2^num = the length of the array of truth values 
+ * @param flip: mod to determine how many bool before !bool
+ */
 const makePart = (num, flip) =>
 {
     let arr = [];
@@ -39,7 +74,11 @@ const makePart = (num, flip) =>
     }
     return arr;
 }
-
+/**
+ * 
+ * @param names
+ * @description set up possible truth values for names
+ */
 const tableSetup = (names) =>
 {
     let obj = {};
@@ -54,68 +93,125 @@ const tableSetup = (names) =>
     return obj;
 }
 
-const separatePropositions = (proposition) =>
+const separatePropositions = (proposition, openCount) =>
 {
-    var propositionArr = [];
-    var str = '';
-    var parBuilding = false;
-    var negPar = false;
-    var connectives = [ 
-        '&', 
-        '->', 
-        '<->',
-         'V'
-        ];
+    let propArr = [];
+    let part = [];
+    let parArr=[]
+    let negArray = [];
+    let maxPar = 0;
+    let negReg = false;
+    let parBuilding = false;
     for(let i = 0; i < proposition.length; i++)
     {
-        if(proposition[i].includes('~') && !proposition[i].includes('~('))
+        if(negReg)
         {
-            propositionArr.push(proposition[i]);
+                part.push({value: '~', type: 'negation'});
+                part.push(proposition[i]);
+                negReg = false;
+        }
+
+        if(proposition[i].type === 'negation')
+        {
+            if(proposition[i + 1].type === 'open')
+            {
+                proposition[i].negationStation = maxPar;
+                negArray.push(proposition[i]);
+            }
+            else
+            {
+                negReg = true;
+            }
+        }
+
+        if(proposition[i].type === 'close')
+        {
+            maxPar -= 1;
+            if(proposition[i].count === openCount)
+            {
+                parBuilding = false;
+            }
+            else
+            {
+                if(maxPar > 0)
+                {   
+                    for(let k = 0; k <= maxPar; k++)
+                    {
+                        parArr[k].push(proposition[k]);
+                    }
+                }
+                else
+                {
+                    parArr[maxPar].push(proposition[i]);
+                }
+            }
         }
 
         if(parBuilding)
         {
-            
-                
-            
-            if(proposition[i] === ')')
+            if(maxPar > 0)
             {
-                parBuilding = false;
-                propositionArr.push(str);
-                if(negPar === true)
+                for(let j = 0; j <= maxPar; j++)
                 {
-                    propositionArr.push(`~(${str})`)
+                    if(parArr[j] == undefined)
+                    {
+                        parArr[j] = [proposition[i]]
+                    }
+                    else
+                    {
+
+                        parArr[j].push(proposition[i]);
+                    }
                 }
             }
             else
             {
-                str += proposition[i];
+                parArr[0] = [proposition[i]];
+            }
+        }
+        else
+        {
+            
+            if(proposition[i].type !== 'close' || proposition[i].type !== 'open' || proposition[i].type !== 'negation')
+            {
+                part.push(proposition[i]);
             }
         }
 
-        if(proposition[i] === '(')
+        if(proposition[i].type === 'open')
         {
-            propositionArr.push(str);
-            str = '';
-            if(proposition[i] === '~(')
+            if(part.length > 1)
             {
-                negPar = true;
+                propArr.push(part);
+                part = [];
             }
-            
+            parArr[maxPar] = [proposition[i]];
+            maxPar = proposition[i].count;
             parBuilding = true;
         }
 
-        if(!parBuilding && str !== '')
+        
+    }
+    propArr.push(part);
+    if(parArr.length > 0)
+    {
+        for(let l = 0; l < parArr.length; l++)
         {
-            
-
-                str += proposition[i];
-            
+            propArr.push(parArr[l]);
         }
     }
-    propositionArr.push(proposition.join(''))
-    console.log(propositionArr);
-    return propositionArr;
+
+    if(negArray.length > 0)
+    {
+        for(let m = 0; m < negArray.length; m++)
+        {
+            let temp = [negArray[m], {value: '(', type: 'open'}];
+            temp.concat(propArr[negArray[m].negationStation]);
+            temp.push({value:')', type: 'close'});
+            propArr.push(temp);
+        }
+    }
+    console.log(propArr);
 }
 
 const findConnective = (str) => 
@@ -128,7 +224,7 @@ const findConnective = (str) =>
     var left = '';
     var right = '';
     for(let i = 0; i < strArr.length; i++)
-    {
+    {   
         if(strArr[i] === '(' )
         {
             parenCount += 1;
@@ -189,11 +285,8 @@ const ifThen = (left, right) =>
 
 const ifAndOnlyIf = (left, right) =>
 {
-    if(left === right)
-    {
-        return true;
-    }
-    return false;
+    console.log(left === right);
+    return left === right;
 }
 
 const evaluate = (left, right, propArr) => 
@@ -230,39 +323,53 @@ const evaluate = (left, right, propArr) =>
         return arr;
 }
 
-const processProposition = (proposition, names) =>
+/**
+ * @param proposition: array of proposition elements
+ * @param names: array of names
+ * @description navigate proposition evaluation
+ */
+const processProposition = (proposition, names, openCount, closeCount) =>
 {
     let truthObj = tableSetup(names);
     console.log(truthObj);
     let propositionArr = [];
     console.log(proposition);
     propositionArr = separatePropositions(proposition)
-    propositionArr = buildTruthObj(propositionArr);
     console.log(propositionArr);
-    for(let i = 0; i < propositionArr.length; i++)
-    {
-        var left = [];
-        var right = [];
-        for(const prop in truthObj)
-        {
-            if(propositionArr[i].right.includes(prop))
-            {
-                right = truthObj[prop];
-            }
+    
+    // propositionArr = buildTruthObj(propositionArr);
+    // console.log(propositionArr);
+    // for(let i = 0; i < propositionArr.length; i++)
+    // {
+    //     var left = [];
+    //     var right = [];
+    //     for(const prop in truthObj)
+    //     {
+    //         if(propositionArr[i].right.includes(prop))
+    //         {
+    //             right = truthObj[prop];
+    //         }
 
-            if(propositionArr[i].left.includes(prop))
-            {
-                left = truthObj[prop];
-            }
-            if(propositionArr[i].conn === '~')
-            {
-                right = 'negation';
-            }
-        }
+    //         if(propositionArr[i].left.includes(prop))
+    //         {
+    //             left = truthObj[prop];
+    //         }
+    //         if(propositionArr[i].conn === '~')
+    //         {
+    //             right = 'negation';
+    //         }
+    //     }
 
-        truthObj[propositionArr[i].proposition] = evaluate(left, right, propositionArr[i]);
-    }
-    console.log(truthObj);
+    //     truthObj[propositionArr[i].proposition] = evaluate(left, right, propositionArr[i]);
+    // }
+    // console.log('truthObj => '+truthObj);
+    
+    // return truthObj;
+}
+
+const makeTable = (truthValues) =>
+{
+    
 }
 
 /**

@@ -3,26 +3,75 @@ import Button from './Button'
 import Names from './Names';
 class Board extends React.Component 
 {
-    state = { proposition: '', names: [], errors: [] }
+    state = { proposition: [], names: [], errors: [], openCount: 0, closeCount: 0, text: '' }
+    connectives = ['&', 'V', '->', '<->']
+    /**
+     * @param event
+     * @description onclick for button component to build the proposition 
+     */
     handleClick = (event) => 
     {
+        let obj;
+        let arr = this.state.proposition;
+        let text = this.state.text + event.target.value + ' ';
+        let openCount = this.state.openCount;
+        let closeCount = this.state.closeCount;
         if(event.target.value === '~')
         {
-            const jim = this.state.proposition
-            this.setState({proposition: jim + event.target.value});
+            obj = 
+            {
+                value: event.target.value,
+                type: 'negation'
+            };
+        }
+        else if(this.connectives.includes(event.target.value))
+        {
+            obj = 
+            {
+                value: event.target.value,
+                type: 'connective'
+            };
+            
+        }
+        else if(event.target.value === '(')
+        {
+            openCount += 1;
+            obj = 
+            {
+                value: event.target.value,
+                type: 'open',
+                count: openCount
+            }
+            
+        }
+        else if(event.target.value === ')')
+        {
+            closeCount += 1;
+            obj = 
+            {
+                value: event.target.value,
+                type: 'close',
+                count: closeCount
+            }
         }
         else 
         {
-            const jim = this.state.proposition
-            this.setState({proposition: jim + event.target.value + ' '});
+            obj = 
+            {
+                value: event.target.value,
+                type: 'name'
+            };
         }
+        arr.push(obj);
+        this.setState({proposition: arr, openCount, closeCount, text});
+        console.log(this.state.proposition);
+        
     }
 
-    handleChange = (event) => 
-    {
-        this.setState({proposition: event.target.value})
-    }
-
+    /**
+     * @param event
+     * @description add name options on select change (currently four available)
+     */
     onSelectChange = (event) => 
     {
         let char = '@'
@@ -35,37 +84,36 @@ class Board extends React.Component
         this.setState({names})
     }
 
+    /**
+     * @description delete elements from proposition as well as text
+     */
     del = () => 
     {
-        const jim = this.state.proposition.trim();
-        this.setState({proposition: jim.substring(0, jim.lastIndexOf(' '))})
+        const text = this.state.text.trim();
+        const proposition = this.state.proposition.length > 1 ? this.state.proposition.pop : []; 
+        this.setState({proposition, text: text.substring(0, text.lastIndexOf(' '))})
         this.setState({errors: []})
     }
 
-
+    /**
+     * @description check for errors before evaluating expression
+     */
     validate = () => 
     {
-        const connectives = ['&', 'V', '->', '<->']
-        const names = this.state.names;
-        const propArr = this.state.proposition.split(' ');
+        const propArr = this.state.proposition;
         let err = [];
         console.log(propArr);
-        let val = this.state.proposition.replace(/\W/g, '');
-        val = val.replace('V', '');
-        if(val.length === 0)
-        {
-            err.push({
-                type: 'no names',
-                msg: 'Not a proposition'
-            })
-        }
+        var names = false;
         var flag = false;
         var conErr = false;
         var nameErr = false
         for(let i = 0; i<propArr.length; i++)
         {
-           
-            if(connectives.includes(propArr[i]) && flag === true && conErr === false)
+           if(propArr[i].type === 'name')
+           {
+               names = true;
+           }
+            if(this.connectives.includes(propArr[i]) && flag === true && conErr === false)
             {
                 err.push({
                     type: 'ambiguity',
@@ -73,17 +121,15 @@ class Board extends React.Component
                 })
                 conErr = true;
             }
-            if(connectives.includes(propArr[i]) && flag === false)
+            if(propArr[i].type === 'connective' && flag === false)
             {
                 flag = true;
             }
-
-            if(flag === true && (propArr[i] === '(' || propArr[i] === ')'))
+            if(flag === true && (propArr[i].value === '(' || propArr[i].value === ')'))
             {
                 flag = false
             }
-
-            if(names.includes(propArr[i]) && names.includes(propArr[i+1]) && nameErr === false)
+            if(nameErr === false && i + 1 < propArr.length && propArr[i].type === 'name' && propArr[i + 1].type === 'name' )
             {
                 err.push({
                     type: 'invalid',
@@ -91,7 +137,13 @@ class Board extends React.Component
                 nameErr = true;
             }
         }
-        
+        if(!names)
+        {
+            err.push({
+                type: 'no names',
+                msg: 'Not a proposition'
+            })
+        }
         if(err.length > 0)
         {
             const errors = err.map(str => <li key={str.type}>{str.msg}</li>);
@@ -99,7 +151,7 @@ class Board extends React.Component
         }
         else
         {
-            this.props.onTruth(this.state.proposition.split(' '), this.state.names);
+            this.props.onTruth(this.state.proposition, this.state.names, this.state.openCount, this.state.closeCount, this.state.text);
         }
     }
 
@@ -110,9 +162,8 @@ class Board extends React.Component
                 <div className="row centered">
                     <div className="column ">
                     <div className="ui input">
-                        <input onChange={this.handleChange} value={this.state.proposition} type="text"/>
+                        <input onChange={() => console.log('hi')} value={this.state.text} type="text"/>
                         <button onClick={this.del}>del</button>
-                        
                     </div>
                     <ul style={{margin: '0px', color:'red'}}>
                         {this.state.errors}
@@ -130,7 +181,7 @@ class Board extends React.Component
                         <Button onClick={this.handleClick}  value="~" name="~" />
                         <Button onClick={this.handleClick}  value="&" name="&" />
                         <Button onClick={this.handleClick}  value="V" name="V" />
-                        <Button onClick={this.handleClick}  value="-> " name="->" />
+                        <Button onClick={this.handleClick}  value="->" name="->" />
                     </div>
                 </div>
                  <div className="row centered">
@@ -143,7 +194,7 @@ class Board extends React.Component
                 </div>
                 <div className="row ">
                     <div className="column ">
-                        <Button onClick={()=>this.setState({proposition: '', names: 0})}  value="clear" name="Clear All" />
+                        <Button onClick={()=>this.setState({proposition: [], names: 0, errors: [], text:''})}  value="clear" name="Clear All" />
                         <Button onClick={this.validate} value="submit" name=" Truthify it !!" />
                     </div>
                 </div>
