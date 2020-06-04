@@ -1,4 +1,4 @@
-(CURRENTLY REFACTORING)
+(UNDER CONSTRUCTION)
 
 Getting my feet wet with react since that's what all the cool kids are doing now. 
 
