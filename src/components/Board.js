@@ -3,7 +3,7 @@ import Button from './Button'
 import Names from './Names';
 class Board extends React.Component 
 {
-    state = { proposition: [], names: [], errors: [], openCount: 0, closeCount: 0, text: '' }
+    state = { proposition: [], names: [], errors: [], text: '' }
     connectives = ['&', 'V', '->', '<->']
     /**
      * @param event
@@ -14,8 +14,6 @@ class Board extends React.Component
         let obj;
         let arr = this.state.proposition;
         let text = this.state.text + event.target.value + ' ';
-        let openCount = this.state.openCount;
-        let closeCount = this.state.closeCount;
         if(event.target.value === '~')
         {
             obj = 
@@ -35,23 +33,18 @@ class Board extends React.Component
         }
         else if(event.target.value === '(')
         {
-            openCount += 1;
             obj = 
             {
                 value: event.target.value,
-                type: 'open',
-                count: openCount
+                type: 'open'
             }
-            
         }
         else if(event.target.value === ')')
         {
-            closeCount += 1;
             obj = 
             {
                 value: event.target.value,
-                type: 'close',
-                count: closeCount
+                type: 'close'
             }
         }
         else 
@@ -63,7 +56,7 @@ class Board extends React.Component
             };
         }
         arr.push(obj);
-        this.setState({proposition: arr, openCount, closeCount, text});
+        this.setState({proposition: arr, text});
         console.log(this.state.proposition);
         
     }
@@ -151,7 +144,7 @@ class Board extends React.Component
         }
         else
         {
-            this.props.onTruth(this.state.proposition, this.state.names, this.state.openCount, this.state.closeCount, this.state.text);
+            this.props.onTruth(this.state.proposition, this.state.names);
         }
     }
 
