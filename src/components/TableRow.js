@@ -1,10 +1,11 @@
 import React from 'react';
 
-const TableRow = ({td}) => 
+const TableRow = ({td, color}) => 
 {
+
     
     return (
-        <tr>
+        <tr style={{backgroundColor: color}}>
             {td}
         </tr>
     )

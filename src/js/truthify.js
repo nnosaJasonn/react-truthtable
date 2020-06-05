@@ -57,9 +57,6 @@ const separatePropositions = (proposition) =>
 
         if(parBuilding)
         {
-            
-                
-            
             if(proposition[i] === ')')
             {
                 parBuilding = false;
@@ -112,7 +109,7 @@ const findConnective = (str) =>
     let ifOrIfIf = ''
     for(let i = 0; i < strArr.length; i++)
     {   
-        if(strArr[i] === '<' || strArr[i] === '-', strArr[i] === '>')
+        if(strArr[i] === '<' || strArr[i] === '-' || strArr[i] === '>')
         {
             ifOrIfIf += strArr[i];
         }
@@ -134,7 +131,7 @@ const findConnective = (str) =>
         }
         if(connectives.includes(ifOrIfIf) && parenCount === 0)
         {
-            conn = strArr[i];
+            conn = ifOrIfIf;
             ifOrIfIf = '';
         }
         if(conn.length === 0)
@@ -257,7 +254,7 @@ const processProposition = (proposition, names) =>
 
         truthObj[propositionArr[i].proposition] = evaluate(left, right, propositionArr[i]);
     }
-    console.log('truthObj => '+truthObj);
+    console.log('truthObj => '+JSON.stringify(truthObj));
     
     return truthObj;
 }
