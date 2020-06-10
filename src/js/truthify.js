@@ -36,6 +36,11 @@ const tableSetup = (names) =>
     return obj;
 }
 
+/**
+ * 
+ * @param proposition 
+ * @description separate proposition into constituant parts
+ */
 const separatePropositions = (proposition) =>
 {
     var propositionArr = [];
@@ -97,6 +102,11 @@ const separatePropositions = (proposition) =>
     return propositionArr;
 }
 
+/**
+ * 
+ * @param str 
+ * @description find connective to evaluate on
+ */
 const findConnective = (str) => 
 {
     let obj = {proposition: str};
@@ -150,6 +160,11 @@ const findConnective = (str) =>
     return obj;
 }
 
+/**
+ * 
+ * @param propArr 
+ * @description set up object for evaluation
+ */
 const buildTruthObj = (propArr) => 
 {
     
@@ -169,6 +184,12 @@ const buildTruthObj = (propArr) =>
     return res;
 }
 
+/**
+ * 
+ * @param left 
+ * @param right 
+ * @description evaluate -> expression
+ */
 const ifThen = (left, right) => 
 {
     if(left && !right)
@@ -178,12 +199,25 @@ const ifThen = (left, right) =>
     return true;
 }
 
+/**
+ * 
+ * @param left 
+ * @param right 
+ * @description evaluate <-> expression
+ */
 const ifAndOnlyIf = (left, right) =>
 {
     console.log(left === right);
     return left === right;
 }
 
+/**
+ * 
+ * @param left 
+ * @param right 
+ * @param propArr 
+ * @description evaluate each proposition in the proposition array
+ */
 const evaluate = (left, right, propArr) => 
 {
     console.log('proposition: ' + JSON.stringify(propArr));

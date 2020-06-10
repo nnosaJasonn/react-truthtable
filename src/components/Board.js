@@ -37,8 +37,8 @@ class Board extends React.Component
 
     del = () => 
     {
-        const jim = this.state.proposition.trim();
-        this.setState({proposition: jim.substring(0, jim.lastIndexOf(' '))})
+        const proposition = this.state.proposition.substring(0, this.state.proposition.length - 1)
+        this.setState({proposition})
         this.setState({errors: []})
     }
 

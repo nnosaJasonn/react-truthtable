@@ -34,7 +34,7 @@ const Table = ({proposition, names}) =>
            }
            else
            {
-               color = 'red';
+               color = 'red'
            }
             
             
@@ -50,7 +50,7 @@ const Table = ({proposition, names}) =>
             Proposition: {proposition} <br/>
             names: {names}
         </div>
-        <table className="ui celled table unstackable">
+        <table className="ui celled black table unstackable">
             <thead>
                 <tr>
                     {head}
