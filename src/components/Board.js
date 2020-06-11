@@ -108,7 +108,7 @@ class Board extends React.Component
     {
         return (
 
-            <div style={{height: '30%', width:'35%', margin:'auto', textAlign:'center'}} >
+            <div style={{height: '50%', width:'50%', margin:'0 auto', textAlign:'center'}} >
 
                     <div style={{display:'flex', margin:'13px'}}>
 
@@ -124,7 +124,7 @@ class Board extends React.Component
                     </div>
                     
                     <div style={{display:'flex', margin:'13px'}}>
-                        
+
                         <Names onClick={this.handleClick} onSelectChange={this.onSelectChange} names={this.state.names}/>
 
                     </div>

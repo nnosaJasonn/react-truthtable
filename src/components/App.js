@@ -10,7 +10,7 @@ class App extends React.Component
    }
     render() {
         return (
-                <div className="ui  centered  container" style={{marginTop: "10px"}}>
+                <div className="ui" style={{marginTop: "10px"}}>
                     <div className="ui message" style={{marginBottom: '20px'}}>
                         <div className="header">
                             <h1>Truth Table!</h1>
