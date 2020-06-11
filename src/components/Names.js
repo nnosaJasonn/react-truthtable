@@ -12,7 +12,7 @@ const Names = (props) =>
             )
         }
         return (
-            <div className="column ">
+            <div >
             {buttons}
             <select onChange={props.onSelectChange} className="ui dropdown">
                 <option value=""></option>
@@ -27,7 +27,7 @@ const Names = (props) =>
 
 
     return (
-        <div className="column ">
+        <div >
         <select onChange={props.onSelectChange} className="ui dropdown">
             <option value="">Select a Number of Names</option>
             <option value="1">1</option>

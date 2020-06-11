@@ -5,7 +5,7 @@ class Button extends React.Component
     render() 
     {
         return (
-            <button 
+            <button style={{whiteSpace:'nowrap'}}
             onClick={this.props.onClick} 
             disabled={this.props.disabled} 
             value={this.props.value} 

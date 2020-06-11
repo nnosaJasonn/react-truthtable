@@ -37,7 +37,8 @@ class Board extends React.Component
 
     del = () => 
     {
-        const proposition = this.state.proposition.substring(0, this.state.proposition.length - 1)
+        let proposition = this.state.proposition.trim();
+        proposition = proposition.substring(0, proposition.length - 1);
         this.setState({proposition})
         this.setState({errors: []})
     }
@@ -106,48 +107,52 @@ class Board extends React.Component
     render() 
     {
         return (
-            <div className="ui two column centered grid">
-                <div className="row centered">
-                    <div className="column ">
-                    <div className="ui input">
-                        <input onChange={this.handleChange} value={this.state.proposition} type="text"/>
-                        <button onClick={this.del}>del</button>
-                        
-                    </div>
-                    <ul style={{margin: '0px', color:'red'}}>
-                        {this.state.errors}
-                    </ul>
-                    </div>
-                </div>
-                
-                <div className="row centered">
-                    
-                    <Names onClick={this.handleClick} onSelectChange={this.onSelectChange} names={this.state.names}/>
 
-                </div>
-                <div className="row centered">
-                    <div className="column ">
-                        <Button onClick={this.handleClick}  value="~" name="~" />
-                        <Button onClick={this.handleClick}  value="&" name="&" />
-                        <Button onClick={this.handleClick}  value="V" name="V" />
-                        <Button onClick={this.handleClick}  value="->" name="->" />
+            <div style={{height: '30%', width:'35%', margin:'auto', textAlign:'center'}} >
+
+                    <div style={{display:'flex', margin:'13px'}}>
+
+                        <div className="ui input">
+                            <input onChange={this.handleChange} value={this.state.proposition} type="text"/>
+                            <button onClick={this.del}>del</button>
+                            
+                        </div>
+                        <ul style={{display:'flex', margin:'10px'}}>
+                            {this.state.errors}
+                        </ul>
+
                     </div>
-                </div>
-                 <div className="row centered">
-                    <div className="column ">
-                        <Button onClick={this.handleClick}  value="<->" name="<->" />
-                        <Button onClick={this.handleClick} value="(" name="(" />
-                        <Button onClick={this.handleClick}  value=")" name=")" />
-                        <Button onClick={this.handleClick} disabled={true} value="⊨" name="⊨" />
+                    
+                    <div style={{display:'flex', margin:'13px'}}>
+                        
+                        <Names onClick={this.handleClick} onSelectChange={this.onSelectChange} names={this.state.names}/>
+
                     </div>
-                </div>
-                <div className="row ">
-                    <div className="column ">
-                        <Button onClick={()=>this.setState({proposition: '', names: 0})}  value="clear" name="Clear All" />
-                        <Button onClick={this.validate} value="submit" name=" Truthify it !!" />
+                    <div style={{display:'flex', margin:'13px'}}>
+                        
+                            <Button onClick={this.handleClick}  value="~" name="~" />
+                            <Button onClick={this.handleClick}  value="&" name="&" />
+                            <Button onClick={this.handleClick}  value="V" name="V" />
+                            <Button onClick={this.handleClick}  value="->" name="->" />
+
                     </div>
-                </div>
-                </div>
+                    <div style={{display:'flex', margin:'13px'}}>
+
+                            <Button onClick={this.handleClick}  value="<->" name="<->" />
+                            <Button onClick={this.handleClick} value="(" name="(" />
+                            <Button onClick={this.handleClick}  value=")" name=")" />
+                            <Button onClick={this.handleClick} disabled={true} value="⊨" name="⊨" />
+
+                    </div>
+                    <div style={{display:'flex', margin:'13px'}}>
+
+                            <Button onClick={()=>this.setState({proposition: '', names: 0})}  value="clear" name="Clear All" />
+                            <Button onClick={this.validate} value="submit" name=" Truthify it !!" />
+
+                    </div>
+
+            </div>
+
         )
     }
 }
