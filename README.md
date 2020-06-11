@@ -7,7 +7,7 @@ Goal: Truth Table Generator: enter a proposition and click submit (truthify it!!
 
 
 Working example here:
-https://desolate-coast-59959.herokuapp.com/
+https://truthify.herokuapp.com/
 
 
 <h3>To Dos:</h3>
