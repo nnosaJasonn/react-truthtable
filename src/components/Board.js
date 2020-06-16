@@ -103,6 +103,10 @@ class Board extends React.Component
             this.props.onTruth(this.state.proposition.split(' '), this.state.names);
         }
     }
+     blur = (event) =>
+    {
+        event.target.blur();
+    }
 
     render() 
     {
@@ -113,7 +117,7 @@ class Board extends React.Component
                     <div style={{display:'flex', margin:'13px'}}>
 
                         <div className="ui input">
-                            <input onChange={this.handleChange} value={this.state.proposition} type="text"/>
+                            <input onChange={this.handleChange} onFocus={this.blur} value={this.state.proposition} type="text"/>
                             <button onClick={this.del}>del</button>
                             
                         </div>
