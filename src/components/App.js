@@ -15,7 +15,16 @@ class App extends React.Component
                         <div className="header">
                             <h1>Truth Table!</h1>
                         </div>
-                            
+                            <p>I built this to begin learning React, but also because I love
+                            logic and would like to build a set of tools for learning symbolic logic.
+                            </p>
+                            <h3>To Dos:</h3>
+                            <ul>
+                                <li>Refactor to use Hooks and Context</li>
+                                <li>Style Style Style</li>
+                                <li>Refactor truth evaluation</li>
+                                <li>Fix issues with validation (e.g. connective, negation, parentheses next to eachother throw error</li>
+                            </ul>
                             
                             <h3>To use:</h3> 
                             <ul>
@@ -36,4 +45,3 @@ class App extends React.Component
 }
 
 export default App;
-
